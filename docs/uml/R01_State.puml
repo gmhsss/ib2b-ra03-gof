@@ -1,0 +1,98 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R01 | State — ciclo de vida do Livro
+class Livro <<Context>> {
+ -id: String
+ -titulo: String
+ -estado: EstadoDoLivro
+ +estado(): EstadoLivro
+ +reservar()
+ +emprestar()
+ +renovar(e: Emprestimo)
+ +devolver()
+ +inspecionar(apto: boolean)
+ +encaminharParaReparo()
+ +concluirReparo()
+ +laudoIrrecuperavel()
+ +verificarExclusao()
+ +alterarEstado(novo: EstadoLivro)
+}
+interface EstadoDoLivro <<State>> {
+ +tipo(): EstadoLivro
+ +reservar(l: Livro)
+ +emprestar(l: Livro)
+ +renovar(l: Livro, e: Emprestimo)
+ +devolver(l: Livro)
+ +inspecionar(l: Livro, apto: boolean)
+ +encaminharParaReparo(l: Livro)
+ +concluirReparo(l: Livro)
+ +laudoIrrecuperavel(l: Livro)
+ +verificarExclusao(l: Livro)
+}
+note right of EstadoDoLivro
+  default: lança RegraNegocioException
+  sem alterar o livro
+end note
+class Livre <<ConcreteState>> {
+ +reservar(l)
+ +encaminharParaReparo(l)
+ +verificarExclusao(l)
+}
+class Reservado <<ConcreteState>> {
+ +emprestar(l)
+}
+class Emprestado <<ConcreteState>> {
+ +renovar(l, e)
+ +devolver(l)
+}
+class Renovado <<ConcreteState>> {
+ +renovar(l, e)
+ +devolver(l)
+}
+class Devolvido <<ConcreteState>> {
+ +inspecionar(l, apto)
+}
+class Reparando <<ConcreteState>> {
+ +concluirReparo(l)
+ +laudoIrrecuperavel(l)
+}
+class Incinerado <<ConcreteState>>
+class Estados {
+ +{static} doTipo(t: EstadoLivro): EstadoDoLivro
+}
+enum EstadoLivro {
+ LIVRE
+ RESERVADO
+ EMPRESTADO
+ RENOVADO
+ DEVOLVIDO
+ REPARANDO
+ INCINERADO
+}
+class Emprestimo {
+ +{static} LIMITE_RENOVACOES = 2
+ -vencimento: LocalDate
+ -numRenovacoes: int
+ +prorrogar()
+}
+Livro *-- "1" EstadoDoLivro : estado atual
+EstadoDoLivro <|.. Livre
+EstadoDoLivro <|.. Reservado
+EstadoDoLivro <|.. Emprestado
+EstadoDoLivro <|.. Renovado
+EstadoDoLivro <|.. Devolvido
+EstadoDoLivro <|.. Reparando
+EstadoDoLivro <|.. Incinerado
+Livro ..> Estados : reconstitui a partir do enum gravado
+Estados ..> EstadoLivro
+Emprestado ..> Emprestimo : guarda [numRenovacoes < 2]\n/ prorrogar()
+Renovado ..> Emprestimo
+@enduml

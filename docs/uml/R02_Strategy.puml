@@ -1,0 +1,42 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R02 | Strategy — políticas de multa
+interface PoliticaMulta <<Strategy>> {
+ +nome(): String
+ +calcular(diasDeAtraso: long): BigDecimal
+}
+class MultaOriginal <<ConcreteStrategy>>
+note bottom of MultaOriginal : R$ 1,00 por dia
+class MultaComTeto <<ConcreteStrategy>>
+note bottom of MultaComTeto : R$ 1,00 por dia, máx. R$ 20,00
+class MultaComTolerancia <<ConcreteStrategy>>
+note bottom of MultaComTolerancia : R$ 1,00 por dia após 2 dias
+class ServicoMultas <<Context>> {
+ -politica: PoliticaMulta
+ +configurarPolitica(nova: PoliticaMulta)
+ +emitir(d: Devolucao): Optional<BoletoMulta>
+}
+class BoletoMulta {
+ -valor: BigDecimal
+ -politica: String
+ -quitado: boolean
+ +quitar(): boolean
+}
+class SistemaIB2B {
+ +{static} inicializar(perfil, banco, politica)
+}
+PoliticaMulta <|.. MultaOriginal
+PoliticaMulta <|.. MultaComTeto
+PoliticaMulta <|.. MultaComTolerancia
+ServicoMultas o--> "1" PoliticaMulta : vigente
+ServicoMultas ..> BoletoMulta : cria com valor\ne nome da política
+SistemaIB2B ..> PoliticaMulta : escolhe pela\nconfiguração (IB2B_POLITICA)
+@enduml

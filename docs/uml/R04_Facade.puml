@@ -1,0 +1,56 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R04 | Facade — entrada única da circulação
+class TratadorDeEmprestimo <<Client>>
+class TratadorDeDevolucao <<Client>>
+class CirculacaoFacade <<Facade>> {
+ +reservar(livro, estudante, dia): Comprovante
+ +efetivarEmprestimo(livro, estudante, dia): Comprovante
+ +renovar(livro, estudante, dia): Comprovante
+ +devolver(livro, estudante, dia): Comprovante
+ +inspecionar(livro, apto, dia): Comprovante
+ +reservaAtiva(livro): Optional<Reserva>
+ +exigirDevolucao(livro, estudante): Devolucao
+}
+class Relacionamento {
+ +exigirEstudante(id)
+}
+class Movimentacao {
+ +exigirReserva(livro, estudante)
+ +removerReserva(livro)
+ +emprestar(e)
+ +devolver(d)
+}
+class Acervo {
+ +exigir(id): Livro
+ +atualizar(l)
+}
+class Livro
+interface UnidadeDeTrabalho {
+ +executar(op: Supplier<T>): T
+}
+class PublicadorDevolucao
+class Comprovante <<record>>
+TratadorDeEmprestimo --> CirculacaoFacade
+TratadorDeDevolucao --> CirculacaoFacade
+CirculacaoFacade --> Relacionamento : 1
+CirculacaoFacade --> Movimentacao : 2, 4, 5
+CirculacaoFacade --> Acervo : 6
+CirculacaoFacade ..> Livro : 3 (State)
+CirculacaoFacade --> UnidadeDeTrabalho : commit / rollback
+CirculacaoFacade --> PublicadorDevolucao : após o commit
+CirculacaoFacade ..> Comprovante : devolve
+note bottom of CirculacaoFacade
+  efetivarEmprestimo: 1 estudante existe; 2 reserva é dele;
+  3 livro.emprestar(); 4 remove reserva; 5 cria empréstimo;
+  6 grava livro. Falha em qualquer passo => rollback total.
+end note
+@enduml

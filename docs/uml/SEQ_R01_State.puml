@@ -1,0 +1,29 @@
+@startuml
+title R01 | State — terceira renovação recusada
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "TratadorDeEmprestimo" as T
+participant "CirculacaoFacade" as F
+participant "UnidadeDeTrabalho" as U
+participant ":Livro" as L
+participant ":Renovado" as R
+participant ":Emprestimo" as E
+T -> F : renovar(L01, E01, dia)
+F -> U : executar(...)
+activate U
+U -> F
+F -> L : renovar(emprestimo)
+L -> R : renovar(livro, emprestimo)
+R -> E : numRenovacoes()
+E --> R : 2
+alt numRenovacoes >= 2 (guarda falha)
+  R --> F : RegraNegocioException
+  note right of E : vencimento e estado\nNÃO são alterados
+  U -> U : rollback
+else numRenovacoes < 2
+  R -> E : prorrogar()  (+30 dias)
+  R -> L : alterarEstado(RENOVADO)
+  U -> U : commit
+end
+deactivate U
+@enduml

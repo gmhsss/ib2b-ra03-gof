@@ -1,0 +1,17 @@
+@startuml
+title R08 | Abstract_Factory — cenário de verificação
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "SistemaIB2B" as SistemaIB2B
+participant "FabricaPersistencia" as FabricaPersistencia
+participant "UnidadeDeTrabalho" as UnidadeDeTrabalho
+participant "LivroRepositorio" as LivroRepositorio
+participant "MovRepositorio" as MovRepositorio
+participant "RelacionamentoRepo" as RelacionamentoRepo
+SistemaIB2B -> FabricaPersistencia : selecionar memória OU MySQL
+FabricaPersistencia -> UnidadeDeTrabalho : criar unidade
+FabricaPersistencia -> LivroRepositorio : criar repositório
+FabricaPersistencia -> MovRepositorio : criar repositório
+FabricaPersistencia -> RelacionamentoRepo : criar repositório
+SistemaIB2B -> UnidadeDeTrabalho : executar transação compartilhada
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+title Implantação — INSTÂNCIAS de exemplo (sem IPs reais)
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+node "notebook01 : Computador" as laptop {
+ node "jvm01 : JVM 17" as jvm {
+  artifact "ib2b : ib2b-ra03-gof.jar" as jar
+  artifact "bancoA : BancoASimulado" as banco
+ }
+}
+node "docker01 : Servidor de banco de dados" as server {
+ node "mysql01 : MySQL 8.4" as ms {
+  database "ib2b : Schema" as schema
+ }
+}
+jar ..> banco : AdaptadorBancoA\n(chamada local, IB2B_BANCO=A)
+jvm --> ms : JDBC / TCP 3306
+note bottom of server
+Instâncias de EXEMPLO (docker-compose.yml),
+não servidores já provisionados.
+end note
+@enduml

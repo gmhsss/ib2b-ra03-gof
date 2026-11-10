@@ -1,0 +1,49 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R09 | Decorator — consulta com recursos opcionais
+interface ConsultaAcervo <<Component>> {
+ +consultar(id: String): Optional<LivroInfo>
+ +invalidar(id: String)  <<default vazio>>
+}
+class ConsultaOriginal <<ConcreteComponent>> {
+ -repo: LivroRepositorio
+}
+abstract class DecoradorConsulta <<Decorator>> {
+ #interno: ConsultaAcervo
+}
+class ConsultaComCache <<ConcreteDecorator>> {
+ -cache: Map<String, LivroInfo>
+ +invalidar(id)
+}
+class ConsultaComMedicao <<ConcreteDecorator>> {
+ -chamadas: AtomicInteger
+ -nanosAcumulados: AtomicLong
+}
+class LivroInfo <<record>> {
+ id: String
+ titulo: String
+}
+class SistemaIB2B {
+ +{static} montarConsulta(repo, "medicao,cache")
+}
+ConsultaAcervo <|.. ConsultaOriginal
+ConsultaAcervo <|.. DecoradorConsulta
+DecoradorConsulta <|-- ConsultaComCache
+DecoradorConsulta <|-- ConsultaComMedicao
+DecoradorConsulta o--> "1" ConsultaAcervo : interno
+SistemaIB2B ..> ConsultaAcervo : monta a cadeia\n(IB2B_CONSULTA)
+note bottom of ConsultaComCache
+  guarda só metadados (id, título);
+  se o cache falhar, vira "miss" e delega.
+  A reserva NUNCA usa esta consulta:
+  a fachada lê o Livro atual.
+end note
+@enduml

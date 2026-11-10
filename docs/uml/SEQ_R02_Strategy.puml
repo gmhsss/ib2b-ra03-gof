@@ -1,0 +1,15 @@
+@startuml
+title R02 | Strategy — cenário de verificação
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "OuvinteMultas" as OuvinteMultas
+participant "ServicoMultas" as ServicoMultas
+participant "PoliticaMulta" as PoliticaMulta
+participant "GatewayCobranca" as GatewayCobranca
+participant "RepoMov" as RepoMov
+OuvinteMultas -> ServicoMultas : emitir(devolucao)
+ServicoMultas -> PoliticaMulta : calcular(5 dias)
+PoliticaMulta -> ServicoMultas : R$ 5,00 (Original)
+ServicoMultas -> GatewayCobranca : emitir(R$ 5,00)
+ServicoMultas -> RepoMov : salvarBoleto(valor, politica)
+@enduml

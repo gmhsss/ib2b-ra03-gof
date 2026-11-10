@@ -1,0 +1,24 @@
+@startuml
+title R09 | Decorator — cache de metadados e reserva
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "TratadorDeAcervo" as T
+participant ":ConsultaComMedicao" as M
+participant ":ConsultaComCache" as C
+participant ":ConsultaOriginal" as O
+participant "LivroRepositorio" as R
+participant "CirculacaoFacade" as F
+T -> M : consultar(L01)
+M -> C : consultar(L01)
+C -> O : consultar(L01)  (miss)
+O -> R : buscar(L01)
+C -> C : guarda LivroInfo(id, título)
+M -> M : chamadas = 1
+T -> M : consultar(L01)
+M -> C : consultar(L01)
+C --> M : LivroInfo (hit, sem repositório)
+M -> M : chamadas = 2
+== Reserva ==
+F -> R : buscar(L01)  (estado ATUAL)
+note right of F : o cache não participa:\nlivro não LIVRE => reserva recusada
+@enduml

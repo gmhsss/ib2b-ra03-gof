@@ -1,0 +1,18 @@
+@startuml
+title R04 | Facade — cenário de verificação
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "TratadorEmprestimo" as TratadorEmprestimo
+participant "Facade" as Facade
+participant "Relacionamento" as Relacionamento
+participant "Movimentacao" as Movimentacao
+participant "Livro" as Livro
+participant "UoW" as UoW
+TratadorEmprestimo -> Facade : efetivarEmprestimo(...)
+Facade -> UoW : executar transação
+Facade -> Relacionamento : validar estudante
+Facade -> Movimentacao : validar/remover reserva
+Facade -> Livro : emprestar()
+Facade -> Movimentacao : salvar empréstimo
+Facade -> UoW : commit / rollback
+@enduml

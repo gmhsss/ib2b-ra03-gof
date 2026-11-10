@@ -1,0 +1,27 @@
+@startuml
+title R03 | Adapter — mesma multa de R$ 7,00 nos bancos A e B
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "ServicoMultas" as S
+participant "<<interface>>\nGatewayCobranca" as G
+participant "AdaptadorBancoA" as AA
+participant "BancoASimulado" as A
+participant "AdaptadorBancoB" as AB
+participant "BancoBSimulado" as B
+== Instalação com banco A ==
+S -> G : emitir("M-L01-...", 7.00, "12345678901")
+G -> AA
+AA -> A : gerarCobranca("ML01...", 700, "12345678901")
+A --> AA : "A-ML01..."
+AA --> S : "A-ML01..."
+S -> G : traduzirNotificacao("LIQ|A-ML01...")
+G -> AA
+AA --> S : NotificacaoPagamento(A-ML01..., PAGA)
+S -> S : boleto.quitar()  (2ª notificação => false)
+== Instalação com banco B ==
+S -> G : emitir("M-L01-...", 7.00, "12345678901")
+G -> AB
+AB -> B : criarBoleto("123.456.789-01", 7.00, "M-L01-...")
+B --> AB : "B/M-L01-..."
+AB --> S : "B/M-L01-..."
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+title R05 | Observer — devolução atrasada
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "CirculacaoFacade" as F
+participant "UnidadeDeTrabalho" as U
+participant "PublicadorDevolucao" as P
+participant "OuvinteInspecao" as I
+participant "OuvinteMultas" as M
+participant "OuvinteIndicadores" as N
+participant "OuvinteEmail" as E
+F -> U : executar(devolver + encerrar empréstimo)
+U --> F : commit (livro DEVOLVIDO)
+F -> P : publicar(EventoDevolucao)
+P -> I : aoDevolver(ev)
+note right of I : livro entra na fila de inspeção
+P -> M : aoDevolver(ev)
+note right of M : [diasAtraso > 0] ServicoMultas.emitir
+P -> N : aoDevolver(ev)
+P -> E : aoDevolver(ev)
+E --> P : exceção (SMTP fora)
+P -> P : guarda FalhaNotificacao\nna fila de reenvio
+note over F, E : A devolução já foi confirmada: nenhuma falha de ouvinte a desfaz.\nO livro continua DEVOLVIDO até a inspeção.
+@enduml

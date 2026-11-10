@@ -1,0 +1,31 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+skinparam state {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+title Máquina de estados de Livro (R01 — State)
+[*] --> LIVRE : cadastrar
+LIVRE --> RESERVADO : reservar
+RESERVADO --> EMPRESTADO : emprestar [reserva do estudante]
+EMPRESTADO --> RENOVADO : renovar [numRenovacoes < 2]\n/ prorrogar 30 dias
+RENOVADO --> RENOVADO : renovar [numRenovacoes < 2]\n/ prorrogar 30 dias
+EMPRESTADO --> DEVOLVIDO : devolver / publicar EventoDevolucao
+RENOVADO --> DEVOLVIDO : devolver / publicar EventoDevolucao
+DEVOLVIDO --> LIVRE : inspecionar [apto]
+DEVOLVIDO --> REPARANDO : inspecionar [danificado]
+LIVRE --> REPARANDO : encaminharParaReparo
+REPARANDO --> LIVRE : concluirReparo
+REPARANDO --> INCINERADO : laudoIrrecuperavel
+INCINERADO --> [*]
+note right of DEVOLVIDO
+  Não aceita reservar antes da inspeção.
+end note
+note left of RENOVADO
+  Guarda e ação ficam no método renovar()
+  da classe do estado de origem
+  (Emprestado / Renovado): a guarda é
+  avaliada ANTES de prorrogar o vencimento.
+end note
+@enduml

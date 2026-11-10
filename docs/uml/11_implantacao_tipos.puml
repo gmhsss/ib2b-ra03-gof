@@ -1,0 +1,29 @@
+@startuml
+title Implantação — TIPOS de nós (implementação CLI em Java 17)
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+node "Computador" as client {
+ node "JVM Java 17+" as jvm {
+  artifact "ib2b-ra03-gof.jar\nCLI + Tratadores + GoF" as app
+  artifact "BancoASimulado / BancoBSimulado\n(classes Java, mesmo processo)" as sim
+ }
+}
+node "Servidor de banco de dados (perfil produção)" as prod {
+ node "MySQL 8.x / InnoDB" as mysql {
+  database "ib2b" as db
+ }
+}
+node "<<externo, NÃO implementado>>\nAPI do banco real" as real #EEEEEE
+app ..> sim : GatewayCobranca\n(Adapter, chamada local)
+jvm --> mysql : JDBC / TCP 3306\n(só com IB2B_PERFIL=mysql)
+sim .. real : substituiria em produção
+note bottom of client
+Perfil de TESTE: família em memória,
+nenhuma conexão de rede.
+Os bancos A e B são SIMULADOS dentro da JVM.
+end note
+note bottom of prod
+Oracle do RA02: réplica externa,
+não recebe escritas da aplicação.
+end note
+@enduml

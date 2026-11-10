@@ -1,0 +1,51 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R05 | Observer — reações independentes à devolução
+class CirculacaoFacade {
+ +devolver(livro, estudante, dia): Comprovante
+}
+class PublicadorDevolucao <<Subject>> {
+ +registrar(o: OuvinteDevolucao)
+ +remover(o: OuvinteDevolucao)
+ +publicar(ev: EventoDevolucao)
+ +reenviarFalhas(): int
+ +falhas(): List<FalhaNotificacao>
+}
+interface OuvinteDevolucao <<Observer>> {
+ +aoDevolver(ev: EventoDevolucao)
+}
+class EventoDevolucao <<record>> {
+ +idLivro(), idEstudante()
+ +vencimento(), dataDevolucao()
+ +diasAtraso(): long
+}
+class FalhaNotificacao <<record>> {
+ ouvinte, evento, erro
+}
+class OuvinteInspecao <<ConcreteObserver>>
+class OuvinteMultas <<ConcreteObserver>>
+class OuvinteIndicadores <<ConcreteObserver>>
+class OuvinteEmail <<ConcreteObserver>>
+class ServicoMultas
+CirculacaoFacade --> PublicadorDevolucao : publicar() após commit
+PublicadorDevolucao o--> "0..*" OuvinteDevolucao
+PublicadorDevolucao --> "0..*" FalhaNotificacao : fila de reenvio
+PublicadorDevolucao ..> EventoDevolucao
+OuvinteDevolucao <|.. OuvinteInspecao
+OuvinteDevolucao <|.. OuvinteMultas
+OuvinteDevolucao <|.. OuvinteIndicadores
+OuvinteDevolucao <|.. OuvinteEmail
+OuvinteMultas --> ServicoMultas : [diasAtraso > 0] emitir
+note bottom of PublicadorDevolucao
+  try/catch por ouvinte: a falha de um
+  não impede os demais nem desfaz a devolução.
+end note
+@enduml

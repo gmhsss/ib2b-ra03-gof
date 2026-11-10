@@ -1,0 +1,55 @@
+# Execução JUnit 5 (junit-platform-console-standalone 1.9.1, Jupiter) — 09/11/2026 21:50
+# Java: openjdk version "21.0.12.1" 2026-08-18; bytecode --release 17
+# MySQL: 8.0.46-0ubuntu0.24.04.4 (IB2B_TESTAR_MYSQL=true)
+
+?
+?? JUnit Platform Suite ?
+?? JUnit Jupiter ?
+?  ?? MySQLIntegracaoTest ?
+?  ?  ?? R08_mysql_repositorios_compartilham_transacao() ?
+?  ?? RequisitosGoFTest ?
+?     ?? R01_laudoIrrecuperavelLevaReparandoAIncinerado() ?
+?     ?? R07_estudanteDuplicadoRetornaCadastroExistente() ?
+?     ?? R01_devolvidoNaoInspecionadoNaoPodeSerReservado() ?
+?     ?? R10_unidadeComDuasSecoesDeTresEDoisLivrosTotalizaCinco() ?
+?     ?? R04_falhaNoMeioDaEfetivacaoDesfazTudo() ?
+?     ?? R04_efetivacaoValidaReservaRemoveReservaCriaEmprestimoEAtualizaLivro() ?
+?     ?? R05_falhaDoEmailNaoAfetaOutrosOuvintesNemDesfazDevolucao() ?
+?     ?? R03_notificacaoRepetidaNaoGeraSegundaQuitacao() ?
+?     ?? R01_estadoGravadoEReconstituido() ?
+?     ?? R01_terceiraRenovacaoRecusada() ?
+?     ?? R05_devolucaoNoPrazoNaoGeraMulta() ?
+?     ?? R02_cincoDiasDeAtrasoNasPoliticas() ?
+?     ?? R09_atualizarTituloInvalidaMetadadoEmCache() ?
+?     ?? R05_devolucaoAtrasadaAlimentaInspecaoMultaEIndicadores() ?
+?     ?? R09_segundaConsultaUsaCacheEAindaGeraMedicao() ?
+?     ?? R08_producaoForneceRepositoriosMySQLNaMesmaUnidadeDeTrabalho() ?
+?     ?? R03_mesmaSolicitacaoGera700CentavosNoAe7ReaisNoB() ?
+?     ?? R06_solicitacoesDiferentesRespeitamLimiteDeDuasRenovacoes() ?
+?     ?? R09_falhaDoCacheNaoImpedeConsulta() ?
+?     ?? R07_cpfNaoCadastradoFalhaAntesDeQualquerGravacao() ?
+?     ?? R04_reservaDeOutroEstudanteNaoPodeSerEfetivada() ?
+?     ?? R02_trocaDePoliticaNaoRecalculaMultaEmitida() ?
+?     ?? R10_grupoRecusaCiclosELivroEmDoisGrupos() ?
+?     ?? R08_configuracaoDeTesteForneceApenasObjetosEmMemoria() ?
+?     ?? R09_cacheAntigoNuncaAutorizaReservaDeLivroQueDeixouDeEstarLivre() ?
+?     ?? R08_falhaNaTransacaoMySQLFazRollback() ?
+?     ?? R06_mesmaRenovacaoExecutadaDuasVezesSoAcrescenta30Dias() ?
+?     ?? R10_moverLivroEntreSecoesNaoAlteraIdEstadoNemEmprestimo() ?
+?     ?? R07_interfacesDeCadastroPreservadas() ?
+?? JUnit Vintage ?
+
+Test run finished after 313 ms
+[         5 containers found      ]
+[         0 containers skipped    ]
+[         5 containers started    ]
+[         0 containers aborted    ]
+[         5 containers successful ]
+[         0 containers failed     ]
+[        30 tests found           ]
+[         0 tests skipped         ]
+[        30 tests started         ]
+[         0 tests aborted         ]
+[        30 tests successful      ]
+[         0 tests failed          ]
+

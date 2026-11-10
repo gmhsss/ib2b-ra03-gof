@@ -1,0 +1,48 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R08 | Abstract Factory — famílias de acesso aos dados
+interface FabricaPersistencia <<AbstractFactory>> {
+ +livros(): LivroRepositorio
+ +movimentacao(): MovimentacaoRepositorio
+ +relacionamento(): RelacionamentoRepositorio
+ +unidadeDeTrabalho(): UnidadeDeTrabalho
+ +familia(): String
+}
+class FabricaMemoria <<ConcreteFactory>>
+class FabricaMySQL <<ConcreteFactory>> {
+ -fonte: FonteDeConexoes
+ -atual: ThreadLocal<Connection>
+}
+interface LivroRepositorio <<AbstractProduct>>
+interface MovimentacaoRepositorio <<AbstractProduct>>
+interface RelacionamentoRepositorio <<AbstractProduct>>
+interface UnidadeDeTrabalho <<AbstractProduct>>
+class SistemaIB2B {
+ +{static} inicializar(perfil, ...)
+}
+FabricaPersistencia <|.. FabricaMemoria
+FabricaPersistencia <|.. FabricaMySQL
+FabricaPersistencia ..> LivroRepositorio
+FabricaPersistencia ..> MovimentacaoRepositorio
+FabricaPersistencia ..> RelacionamentoRepositorio
+FabricaPersistencia ..> UnidadeDeTrabalho
+SistemaIB2B ..> FabricaPersistencia : escolhe UMA vez\n(IB2B_PERFIL)
+note bottom of FabricaMemoria
+  produtos: classes internas;
+  UoW = snapshot + restauração
+end note
+note bottom of FabricaMySQL
+  produtos: classes internas JDBC;
+  os 3 repositórios usam a Connection
+  da UoW em curso (commit/rollback).
+  Oracle: réplica, sem escrita.
+end note
+@enduml

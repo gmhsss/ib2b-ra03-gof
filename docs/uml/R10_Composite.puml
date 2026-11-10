@@ -1,0 +1,41 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R10 | Composite — organização do acervo
+interface ElementoAcervo <<Component>> {
+ +contar(): int
+ +listarIds(): List<String>
+}
+class GrupoAcervo <<Composite>> {
+ -nome: String
+ -pai: GrupoAcervo
+ -donoDeLivro: Map<String, GrupoAcervo>
+ +novaSecao(nome): GrupoAcervo
+ +anexarGrupo(outro: GrupoAcervo)
+ +moverPara(destino: GrupoAcervo)
+ +incluirLivro(idLivro)
+ +removerLivro(idLivro)
+ +transferirLivro(idLivro, destino)
+}
+class ItemAcervo <<Leaf>> {
+ -livroId: String
+}
+ElementoAcervo <|.. GrupoAcervo
+ElementoAcervo <|.. ItemAcervo
+GrupoAcervo *--> "0..*" GrupoAcervo : subgrupos
+GrupoAcervo *--> "0..*" ItemAcervo : itens
+note right of GrupoAcervo
+  recusa ciclo (destino não pode ser
+  ele mesmo nem descendente) e livro
+  já registrado em donoDeLivro.
+  Item só referencia o id: mover não
+  toca em Livro nem em Movimentacao.
+end note
+@enduml

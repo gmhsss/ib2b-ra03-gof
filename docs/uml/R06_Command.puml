@@ -1,0 +1,44 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R06 | Command — solicitações de circulação
+interface SolicitacaoCirculacao <<Command>> {
+ +identificador(): UUID
+ +autor(): String
+ +criadaEm(): Instant
+ +executar(f: CirculacaoFacade): Comprovante
+}
+class SolicitacaoReserva <<ConcreteCommand>> {
+ livro: String
+ dia: LocalDate
+}
+class SolicitacaoRenovacao <<ConcreteCommand>> {
+ livro: String
+ dia: LocalDate
+}
+class ExecutorSolicitacoes <<Invoker>> {
+ -feitos: Map<UUID, Comprovante>
+ +executar(c: SolicitacaoCirculacao): Comprovante {synchronized}
+}
+class CirculacaoFacade <<Receiver>>
+class Main <<Client>>
+class TratadorDeEmprestimo {
+ +processar(c: SolicitacaoCirculacao): Comprovante
+}
+SolicitacaoCirculacao <|.. SolicitacaoReserva
+SolicitacaoCirculacao <|.. SolicitacaoRenovacao
+Main ..> SolicitacaoReserva : cria
+Main ..> SolicitacaoRenovacao : cria
+Main --> TratadorDeEmprestimo : encaminha
+TratadorDeEmprestimo --> ExecutorSolicitacoes
+ExecutorSolicitacoes --> SolicitacaoCirculacao : executa 1x por UUID
+SolicitacaoReserva ..> CirculacaoFacade : reservar()
+SolicitacaoRenovacao ..> CirculacaoFacade : renovar()
+@enduml

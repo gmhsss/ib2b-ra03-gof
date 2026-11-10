@@ -1,0 +1,56 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R07 | Template Method — rotina comum de cadastro
+abstract class "CadastroAbstrato<T>" as CA <<AbstractClass>> {
+ +incluir(entrada: String...): T «final»
+ #{abstract} buscarExistente(e): Optional<T>
+ #{abstract} validar(e)
+ #verificarPreRequisitos(e)  <<gancho>>
+ #{abstract} criar(e): T
+ #{abstract} armazenar(obj: T)
+ #apresentar(obj: T): T  <<gancho>>
+}
+note right of CA
+  incluir() é final e fixa a ordem:
+  buscar existente -> validar ->
+  verificar pré-requisitos -> criar ->
+  armazenar -> apresentar,
+  tudo dentro de uma UnidadeDeTrabalho.
+end note
+class CadastroLivro
+class CadastroPessoa
+class CadastroEstudante {
+ #verificarPreRequisitos(e)
+}
+class CadastroAtendente {
+ #verificarPreRequisitos(e)
+}
+CA <|-- CadastroLivro
+CA <|-- CadastroPessoa
+CA <|-- CadastroEstudante
+CA <|-- CadastroAtendente
+interface iLivro
+interface iPessoa
+interface iEstudante
+interface iAtendente
+class TratadorDeAcervo
+class TratadorDePessoa
+class TratadorDeEstudante
+class TratadorDeAtendente
+iLivro <|.. TratadorDeAcervo
+iPessoa <|.. TratadorDePessoa
+iEstudante <|.. TratadorDeEstudante
+iAtendente <|.. TratadorDeAtendente
+TratadorDeAcervo --> CadastroLivro
+TratadorDePessoa --> CadastroPessoa
+TratadorDeEstudante --> CadastroEstudante
+TratadorDeAtendente --> CadastroAtendente
+@enduml

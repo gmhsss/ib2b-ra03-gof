@@ -1,0 +1,15 @@
+@startuml
+title R07 | Template_Method — cenário de verificação
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "TratadorEstudante" as TratadorEstudante
+participant "CadastroEstudante" as CadastroEstudante
+participant "RepoRelacionamento" as RepoRelacionamento
+participant "UoW" as UoW
+TratadorEstudante -> CadastroEstudante : incluir(id,CPF)
+CadastroEstudante -> UoW : executar transação
+CadastroEstudante -> RepoRelacionamento : buscar existente
+CadastroEstudante -> RepoRelacionamento : verificar CPF Pessoa
+CadastroEstudante -> RepoRelacionamento : salvarEstudante se válido
+CadastroEstudante -> TratadorEstudante : existente ou novo
+@enduml

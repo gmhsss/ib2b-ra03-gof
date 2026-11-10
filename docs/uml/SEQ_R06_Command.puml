@@ -1,0 +1,16 @@
+@startuml
+title R06 | Command — cenário de verificação
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "CLI" as CLI
+participant "TratadorEmprestimo" as TratadorEmprestimo
+participant "Executor" as Executor
+participant "SolicitacaoRenovacao" as SolicitacaoRenovacao
+participant "Facade" as Facade
+CLI -> TratadorEmprestimo : processar(comando UUID)
+TratadorEmprestimo -> Executor : executar(comando)
+Executor -> SolicitacaoRenovacao : executar(fachada) só na 1ª vez
+SolicitacaoRenovacao -> Facade : renovar()
+CLI -> Executor : mesmo UUID de novo
+Executor -> CLI : comprovante anterior (sem executar)
+@enduml

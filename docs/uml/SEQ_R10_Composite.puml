@@ -1,0 +1,23 @@
+@startuml
+title R10 | Composite — contagem, movimento e ciclo
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+participant "Cliente" as Cl
+participant "unidade:GrupoAcervo" as U
+participant "s1:GrupoAcervo" as S1
+participant "s2:GrupoAcervo" as S2
+participant ":ItemAcervo" as I
+Cl -> U : contar()
+U -> S1 : contar()
+S1 --> U : 3
+U -> S2 : contar()
+S2 --> U : 2
+U --> Cl : 5
+Cl -> S1 : transferirLivro("L1", s2)
+S1 -> S1 : itens.remove("L1")
+S1 -> S2 : itens.put("L1", item)
+S1 -> S1 : donoDeLivro["L1"] = s2
+note right of I : só a referência muda;\nLivro e Emprestimo não são tocados
+Cl -> S1 : anexarGrupo(unidade)
+S1 --> Cl : RegraNegocioException("Ciclo no acervo")
+@enduml

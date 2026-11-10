@@ -1,0 +1,60 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName DejaVu Sans
+skinparam ArrowColor #315671
+skinparam class {
+ BackgroundColor #EAF3FA
+ BorderColor #315671
+}
+hide empty members
+title R03 | Adapter — bancos incompatíveis
+class ServicoMultas <<Client>> {
+ +emitir(d: Devolucao)
+ +registrarNotificacao(msg: String): boolean
+}
+interface GatewayCobranca <<Target>> {
+ +emitir(codigo: String, reais: BigDecimal, cpf: String): String
+ +traduzirNotificacao(msg: String): NotificacaoPagamento
+}
+class AdaptadorBancoA <<Adapter>> {
+ +emitir(...)
+ +traduzirNotificacao(...)
+}
+class AdaptadorBancoB <<Adapter>> {
+ +emitir(...)
+ +traduzirNotificacao(...)
+}
+class BancoASimulado <<Adaptee>> {
+ +gerarCobranca(nossoNumero: String, centavos: int, cpfDigitos: String): String
+}
+class BancoBSimulado <<Adaptee>> {
+ +criarBoleto(cpfFormatado: String, valorReais: BigDecimal, referencia: String): String
+}
+class NotificacaoPagamento <<record>> {
+ +codigoExterno: String
+ +situacao: SituacaoCobranca
+}
+enum SituacaoCobranca {
+ PAGA
+ CANCELADA
+}
+ServicoMultas --> GatewayCobranca : sem "if banco"
+GatewayCobranca <|.. AdaptadorBancoA
+GatewayCobranca <|.. AdaptadorBancoB
+AdaptadorBancoA --> BancoASimulado
+AdaptadorBancoB --> BancoBSimulado
+GatewayCobranca ..> NotificacaoPagamento
+NotificacaoPagamento --> SituacaoCobranca
+note bottom of AdaptadorBancoA
+  valor: 7.00 -> 700 centavos
+  CPF: só dígitos
+  id: alfanumérico
+  "LIQ|A-..." -> PAGA
+end note
+note bottom of AdaptadorBancoB
+  valor: 7.00 -> 7.00 reais
+  CPF: 000.000.000-00
+  "status=pago;boleto=B/..." -> PAGA
+end note
+@enduml
