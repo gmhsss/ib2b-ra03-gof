@@ -74,7 +74,7 @@
 
 ## Verificações a cargo da equipe antes da entrega
 
-- [ ] `mvn clean test` no computador da equipe.
+- [x] `mvn clean test` no computador da equipe: BUILD SUCCESS.
 - [ ] Abrir `docs/iB2B_RA03_FINAL.asta` no Astah.
 - [ ] Ensaiar a demonstração de 5 minutos e a arguição (todas as integrantes explicam todos os padrões).
 

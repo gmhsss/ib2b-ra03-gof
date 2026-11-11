@@ -9,7 +9,7 @@
 
 ## Falta no computador da equipe
 
-- [ ] `mvn clean test` no Mac (mesmos testes, agora pelo Maven).
+- [x] `mvn clean test` no Mac: BUILD SUCCESS (Tests run: 30, Failures: 0, Skipped: 1 — o MySQL só roda com IB2B_TESTAR_MYSQL=true).
 - [ ] Abrir `docs/iB2B_RA03_FINAL.asta` no Astah e passar o olho nos diagramas.
-- [ ] Repositório Git enviado (sem `target/`).
+- [x] Repositório Git enviado: https://github.com/gmhsss/ib2b-ra03-gof
 - [ ] Ensaio: 5 minutos + cada integrante explica qualquer um dos dez padrões e faz uma extensão ao vivo (`EXTENSOES_AO_VIVO.md`).
